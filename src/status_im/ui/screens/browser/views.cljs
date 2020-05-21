@@ -3,6 +3,7 @@
             [reagent.core :as reagent]
             [status-im.browser.core :as browser]
             [status-im.browser.webview-ref :as webview-ref]
+            [taoensso.timbre :as log]
             [status-im.i18n :as i18n]
             [status-im.ui.components.chat-icon.screen :as chat-icon]
             [status-im.ui.components.colors :as colors]
@@ -132,6 +133,11 @@
         ;; https://reactjs.org/docs/events.html#event-pooling
         :on-message                                 #(re-frame/dispatch [:browser/bridge-message-received (.. ^js % -nativeEvent -data)])
         :on-load                                    #(re-frame/dispatch [:browser/loading-started])
+        :on-load-start                              #(let [event (.. ^js % -nativeEvent)]
+                                                       (log/info "#on-load-start" (.-title ^js event) (.-title ^js event))
+                                                       (when (not= (.-title ^js event) (.-url ^js event))
+                                                         (log/info "#on-load-start not equal")
+                                                         (re-frame/dispatch [:browser/error-occured])))
         :on-error                                   #(re-frame/dispatch [:browser/error-occured])
         :injected-java-script-before-content-loaded (js-res/ethereum-provider (str network-id))
         :injected-java-script                       js-res/webview-js}])]
