@@ -138,6 +138,7 @@
                                                        (when (not= (.-title ^js event) (.-url ^js event))
                                                          (log/info "#on-load-start not equal")
                                                          (re-frame/dispatch [:browser/error-occured])))
+        :on-http-error                              #(re-frame/dispatch [:browser/error-occured])
         :on-error                                   #(re-frame/dispatch [:browser/error-occured])
         :injected-java-script-before-content-loaded (js-res/ethereum-provider (str network-id))
         :injected-java-script                       js-res/webview-js}])]
