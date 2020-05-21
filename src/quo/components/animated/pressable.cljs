@@ -1,4 +1,4 @@
-(ns quo.components.button.animation
+(ns quo.components.animated.pressable
   (:require [quo.animated :as animated]
             [quo.gesture-handler :as gesture-handler]))
 
@@ -97,3 +97,5 @@
                                           :border-radius    border-radius})}]
            (into [animated/view {:style foreground}]
                  children)]]]))))
+
+
