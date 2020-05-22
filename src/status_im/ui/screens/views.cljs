@@ -23,6 +23,7 @@
             status-im.ui.screens.wallet.collectibles.superrare.views
             status-im.ui.screens.wallet.collectibles.kudos.views
             [status-im.ui.components.colors :as colors]
+            [quo.previews.main :as quo]
             [status-im.hardwallet.test-menu :as hardwallet.test-menu]
             [status-im.utils.config :as config]
             [status-im.reloader :as reloader]))
@@ -99,24 +100,26 @@
     (fn []
       [react/safe-area-provider
        ^{:key (str @colors/theme @reloader/cnt)}
-       [react/view {:flex             1
-                    :background-color colors/black-persist}
-        [navigation/navigation-container
-         (merge {:ref               (fn [r]
-                                      (navigation/set-navigator-ref r))
-                 :onStateChange     on-state-change
-                 :enableURLHandling false}
-                (when debug?
-                  {:enableURLHandling true
-                   :initialState      @state}))
-         [main-app-navigator]]
-        [wallet/prepare-transaction]
-        [wallet/request-transaction]
-        [wallet/select-account]
-        [signing/signing]
-        [bottom-sheet]
-        [popover/popover]
-        (when debug?
-          [reloader/reload-view @reloader/cnt])
-        (when config/keycard-test-menu-enabled?
-          [hardwallet.test-menu/test-menu])]])}))
+       [quo/preview-screens]
+       (comment
+         [react/view {:flex             1
+                      :background-color colors/black-persist}
+          [navigation/navigation-container
+           (merge {:ref               (fn [r]
+                                        (navigation/set-navigator-ref r))
+                   :onStateChange     on-state-change
+                   :enableURLHandling false}
+                  (when debug?
+                    {:enableURLHandling true
+                     :initialState      @state}))
+           [main-app-navigator]]
+          [wallet/prepare-transaction]
+          [wallet/request-transaction]
+          [wallet/select-account]
+          [signing/signing]
+          [bottom-sheet]
+          [popover/popover]
+          (when debug?
+            [reloader/reload-view @reloader/cnt])
+          (when config/keycard-test-menu-enabled?
+            [hardwallet.test-menu/test-menu])])])}))
