@@ -60,8 +60,8 @@
     (fn [{:keys [background-color border-radius type disabled
                  on-press on-long-press on-press-start
                  accessibility-label]
-          :or   {border-radius 0
-                 type          :primary}}
+          :or  {border-radius 0
+                type          :primary}}
          & children]
       (let [{:keys [background foreground]}
             (type->animation {:type      type
@@ -80,11 +80,13 @@
                                                       (animated/call* [] handle-press-start))
                                       (animated/cond* (animated/and* (animated/eq state (:end gesture-handler/states))
                                                                      (animated/not* long-pressed))
-                                                      (animated/call* [] handle-press))
+                                                      [(animated/call* [] handle-press)
+                                                       (animated/set state (:undetermined gesture-handler/states))])
                                       (animated/cond* (animated/and* (animated/eq state (:end gesture-handler/states))
                                                                      long-pressed)
                                                       [(animated/set long-pressed 0)
-                                                       (animated/call* [] handle-long-press)])])}]
+                                                       (animated/call* [] handle-long-press)
+                                                       (animated/set state (:undetermined gesture-handler/states))])])}]
          [gesture-handler/tap-gesture-handler
           (merge gesture-handler
                  {:shouldCancelWhenOutside true
