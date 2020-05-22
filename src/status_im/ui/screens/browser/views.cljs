@@ -134,7 +134,7 @@
         :on-message                                 #(re-frame/dispatch [:browser/bridge-message-received (.. ^js % -nativeEvent -data)])
         :on-load                                    #(re-frame/dispatch [:browser/loading-started])
         :on-load-start                              #(let [event (.. ^js % -nativeEvent)]
-                                                       (log/info "#on-load-start" (.-title ^js event) (.-title ^js event))
+                                                       (log/info "#on-load-start" (.-title ^js event) (.-url ^js event))
                                                        (when (not= (.-title ^js event) (.-url ^js event))
                                                          (log/info "#on-load-start not equal")
                                                          (re-frame/dispatch [:browser/error-occured])))

@@ -53,7 +53,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
         super.onCreate();
         SoLoader.init(this, /* native exopackage */ false);
         WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG_WEBVIEW == "1");
-        initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
+        //initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
     }
     /**
      * Loads Flipper in React Native templates. Call this in the onCreate method with something like

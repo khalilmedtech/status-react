@@ -233,14 +233,17 @@
 (fx/defn navigation-state-changed
   [cofx event error?]
   (let [{:strs [url loading title]} (js->clj event)
-        deep-link? (universal-links/deep-link? url)]
-    (if (universal-links/universal-link? url)
-      (when-not (and deep-link? platform/ios?) ;; ios webview handles this
-        (universal-links/handle-url cofx url))
-      (fx/merge cofx
-                (update-browser-option :loading? loading)
-                (update-browser-name title)
-                (update-browser-on-nav-change url error?)))))
+        deep-link? (universal-links/deep-link? url)
+        _ (log/info "#navigation-state-changed" title url)]
+    (cond (not= title url)
+          (re-frame/dispatch [:browser/error-occured])
+          (universal-links/universal-link? url)
+          (when-not (and deep-link? platform/ios?) ;; ios webview handles this
+            (universal-links/handle-url cofx url))
+          :else (fx/merge cofx
+                          (update-browser-option :loading? loading)
+                          (update-browser-name title)
+                          (update-browser-on-nav-change url error?)))))
 
 (fx/defn open-url-in-current-browser
   "Opens a url in the current browser, which mean no new entry is added to the home page
