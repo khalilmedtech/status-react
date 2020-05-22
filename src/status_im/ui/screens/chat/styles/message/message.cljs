@@ -311,8 +311,7 @@
     (default-blockquote-text-style)))
 
 (defn image-content [outgoing]
-  {:margin-vertical            10
-   :overflow                   :hidden
+  {:overflow                   :hidden
    :border-top-left-radius     16
    :border-top-right-radius    16
    :border-bottom-left-radius  (if outgoing 16 4)

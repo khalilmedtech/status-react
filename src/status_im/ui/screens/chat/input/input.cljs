@@ -53,11 +53,10 @@
    {:style               style/cancel-reply-highlight
     :on-press            on-press
     :accessibility-label :cancel-message-reply}
-   [react/view {:style style/cancel-reply-container}
-    [vector-icons/icon :main-icons/close {:container-style style/cancel-reply-icon
-                                          :width           19
-                                          :height          19
-                                          :color           colors/white}]]])
+   [vector-icons/icon :main-icons/close {:container-style style/cancel-reply-icon
+                                         :width           19
+                                         :height          19
+                                         :color           colors/white}]])
 
 (defn reply-message-view [{:keys [content from alias]}]
   [react/view {:style style/reply-message}

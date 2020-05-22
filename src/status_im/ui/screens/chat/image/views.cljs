@@ -5,7 +5,6 @@
             [re-frame.core :as re-frame]
             [status-im.ui.components.colors :as colors]
             [status-im.ui.components.animation :as anim]
-            [status-im.ui.screens.chat.image.styles :as styles]
             [status-im.ui.components.icons.vector-icons :as icons]
             [status-im.ui.screens.chat.image.capture.views :as capture]
             [status-im.i18n :as i18n]))
@@ -40,41 +39,44 @@
     [react/view {:width            128 :height 48
                  :background-color colors/black-transparent-86
                  :border-radius    44 :align-items :center :justify-content :center :margin-top 8}
-     [react/text {:style {:color colors/white-persist}}
+     [react/text {:style {:color colors/white-persist
+                          :font-weight "500"}}
       (i18n/label :t/photos)]]]])
 
-(defn image-preview [uri first?]
-  [react/touchable-highlight {:on-press #(re-frame/dispatch [:chat.ui/image-selected uri])}
-   [react/image {:style  (merge {:width            128
-                                 :height           128
-                                 :background-color :black
-                                 :border-radius    4}
-                                (when first?
-                                  {:margin-bottom 8}))
-                 :source {:uri uri}}]])
+(defn image-preview [uri first? panel-height]
+  (let [wh (/ (- panel-height 8) 2)]
+    [react/touchable-highlight {:on-press #(re-frame/dispatch [:chat.ui/image-selected uri])}
+     [react/image {:style  (merge {:width            wh
+                                   :height           wh
+                                   :background-color :black
+                                   :border-radius    4}
+                                  (when first?
+                                    {:margin-bottom 8}))
+                   :source {:uri uri}}]]))
 
-(defview photos []
+(defview photos [panel-height]
   (letsubs [camera-roll-photos [:camera-roll-photos]]
     [react/view {:flex 1 :flex-direction :row}
      (for [[first-img second-img] (partition 2 camera-roll-photos)]
        ^{:key (str "image" first-img)}
        [react/view {:margin-left 8}
         (when first-img
-          [image-preview first-img true])
+          [image-preview first-img true panel-height])
         (when second-img
-          [image-preview second-img false])])]))
+          [image-preview second-img false panel-height])])]))
 
 (defview image-view []
-  (letsubs [bottom-anim-value (anim/create-value styles/image-panel-height)
+  (letsubs [panel-height      [:chats/chat-panel-height]
+            bottom-anim-value (anim/create-value @panel-height)
             alpha-value       (anim/create-value 0)]
     {:component-did-mount (fn []
                             (show-panel-anim bottom-anim-value alpha-value)
-                            (re-frame/dispatch [:chat.ui/camera-roll-get-photos 15]))}
+                            (re-frame/dispatch [:chat.ui/camera-roll-get-photos 20]))}
     [react/animated-view {:style {:background-color colors/white
-                                  :height           styles/image-panel-height
+                                  :height           panel-height
                                   :transform        [{:translateY bottom-anim-value}]
                                   :opacity          alpha-value}}
-     [react/scroll-view {:horizontal true}
+     [react/scroll-view {:horizontal true :style {:flex 1}}
       [react/view {:flex 1 :flex-direction :row :margin-horizontal 8}
        [buttons]
-       [photos]]]]))
+       [photos panel-height]]]]))

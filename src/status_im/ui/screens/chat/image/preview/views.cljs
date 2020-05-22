@@ -18,9 +18,9 @@
                                           :background-color :black})
                      :resize-mode :contain
                      :source      {:uri (:image content)}}]]
-      [react/view {:margin-bottom   20 :flex-direction :row :padding-horizontal 28
+      [react/view {:flex-direction :row :padding-horizontal 8
                    :justify-content :space-between :align-items :center}
-       [react/view {:width 24}]
+       [react/view {:width 64}]
        [button/button {:on-press   #(re-frame/dispatch [:navigate-back])
                        :type       :secondary
                        :label      :t/close
@@ -29,5 +29,7 @@
         {:on-press #(re-frame/dispatch [:bottom-sheet/show-sheet
                                         {:content (sheets/image-long-press message true)
                                          :height  64}])}
-        [icons/icon :main-icons/more {:container-style {:width 24 :height 24}
+        [icons/icon :main-icons/more {:container-style {:width 24 :height 24
+
+                                                        :margin 20}
                                       :color           colors/white-persist}]]]]]))
